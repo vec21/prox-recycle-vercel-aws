@@ -67,7 +67,7 @@ export default function MapView({ userId, onClaim }: MapViewProps) {
             animate={{ scale: 1 }}
             whileHover={{ scale: 1.1 }}
             className="absolute"
-            style={{ top: `${b.lat}%`, left: `${b.lng}%` }}
+            style={{ top: `${b.mapY}%`, left: `${b.mapX}%` }}
             onClick={() => setSelectedBounty(b)}
           >
             <div className="relative cursor-pointer">

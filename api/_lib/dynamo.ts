@@ -122,8 +122,10 @@ export interface BountyRecord {
   bountyId: string;
   material: string;
   value: number;
-  lat: number;
-  lng: number;
+  /** CSS percentage (0–100) for vertical position on the UI map grid. Not a geographic coordinate. */
+  mapY: number;
+  /** CSS percentage (0–100) for horizontal position on the UI map grid. Not a geographic coordinate. */
+  mapX: number;
   status: 'available' | 'claimed' | 'completed';
   type: 'regular' | 'surge';
   claimedBy?: string;
@@ -218,6 +220,15 @@ export async function getUserClaims(userId: string, limit = 5): Promise<ClaimRec
 
 // ── Leaderboard helper ────────────────────────────────────────────────────────
 
+/**
+ * Returns top `limit` users sorted by recycledWeight descending.
+ *
+ * Current implementation uses a full-table Scan — acceptable for a contest demo
+ * where the user base is small. For production scale, create a GSI with a fixed
+ * partition key (e.g. `pk = "LEADERBOARD"`) and `recycledWeight` as the sort key
+ * so this becomes an efficient `Query` with `ScanIndexForward: false`.
+ * See ARCHITECTURE.md for the recommended migration path.
+ */
 export async function getLeaderboard(limit = 10): Promise<UserRecord[]> {
   const result = await ddb.send(
     new ScanCommand({

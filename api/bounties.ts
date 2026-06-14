@@ -19,10 +19,9 @@ function generateBounties(): BountyRecord[] {
     bountyId: uuidv4(),
     material: MATERIALS[Math.floor(Math.random() * MATERIALS.length)],
     value: Math.floor(Math.random() * 500) + 50,
-    // Normalized percentage coordinates (5–90%) used by the CSS-positioned UI map.
-    // These are NOT geographic lat/lng values.
-    lat: Math.round(5 + Math.random() * 85),
-    lng: Math.round(5 + Math.random() * 85),
+    // CSS percentage (0–100) for position on the UI map grid. Not geographic coordinates.
+    mapY: Math.round(5 + Math.random() * 85),
+    mapX: Math.round(5 + Math.random() * 85),
     status: 'available' as const,
     type: Math.random() > 0.7 ? ('surge' as const) : ('regular' as const),
     createdAt: new Date().toISOString(),

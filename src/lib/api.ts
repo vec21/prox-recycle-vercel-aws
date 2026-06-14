@@ -28,8 +28,10 @@ export interface Bounty {
   bountyId: string;
   material: string;
   value: number;
-  lat: number;
-  lng: number;
+  /** CSS percentage (0–100) for vertical position on the UI map grid. Not a geographic coordinate. */
+  mapY: number;
+  /** CSS percentage (0–100) for horizontal position on the UI map grid. Not a geographic coordinate. */
+  mapX: number;
   status: 'available' | 'claimed' | 'completed';
   type: 'regular' | 'surge';
 }
