@@ -3,13 +3,23 @@
  * All calls hit Vercel serverless functions — no AWS credentials in the browser.
  */
 
+export interface LastClaim {
+  amount: number;
+  material: string;
+  weight: number;
+  co2SavedKg: number;
+  citations: Array<{ id: string; source: string }>;
+  provider: string;
+  date: string;
+}
+
 export interface UserData {
   userId: string;
   displayName: string;
   balance: number;
   recycledWeight: number;
   notificationsEnabled: boolean;
-  lastClaim?: Record<string, unknown>;
+  lastClaim?: LastClaim;
   createdAt: string;
   updatedAt: string;
 }

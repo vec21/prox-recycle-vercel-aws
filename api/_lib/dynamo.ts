@@ -12,12 +12,19 @@ import {
   ScanCommand,
 } from '@aws-sdk/lib-dynamodb';
 
+const accessKeyId = process.env.AWS_ACCESS_KEY_ID;
+const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
+
+if (!accessKeyId || !secretAccessKey) {
+  throw new Error(
+    'Missing required AWS credentials. Set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY ' +
+      'in your environment variables (Vercel dashboard or .env.local for local dev).'
+  );
+}
+
 const client = new DynamoDBClient({
   region: process.env.AWS_REGION || 'us-east-1',
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
-  },
+  credentials: { accessKeyId, secretAccessKey },
 });
 
 export const ddb = DynamoDBDocumentClient.from(client, {
@@ -32,13 +39,23 @@ export const TABLES = {
 
 // ── User helpers ─────────────────────────────────────────────────────────────
 
+export interface LastClaimSnapshot {
+  amount: number;
+  material: string;
+  weight: number;
+  co2SavedKg: number;
+  citations: Array<{ id: string; source: string }>;
+  provider: string;
+  date: string;
+}
+
 export interface UserRecord {
   userId: string;
   displayName: string;
   balance: number;
   recycledWeight: number;
   notificationsEnabled: boolean;
-  lastClaim?: Record<string, unknown>;
+  lastClaim?: LastClaimSnapshot;
   createdAt: string;
   updatedAt: string;
 }
@@ -77,7 +94,7 @@ export async function addToUserBalance(
   userId: string,
   rewardKz: number,
   weight: number,
-  lastClaim: Record<string, unknown>
+  lastClaim: LastClaimSnapshot
 ): Promise<void> {
   const now = new Date().toISOString();
   await ddb.send(

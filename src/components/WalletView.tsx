@@ -155,8 +155,8 @@ export default function WalletView({ userData, onOpenSettings }: WalletViewProps
             <ActivityItem
               label="Bounty_Claim"
               date="Recent"
-              amount={`+${(userData.lastClaim as { amount?: number }).amount ?? 0}`}
-              material={String((userData.lastClaim as { material?: unknown }).material ?? 'ECO')}
+              amount={`+${userData.lastClaim.amount ?? 0}`}
+              material={userData.lastClaim.material ?? 'ECO'}
               status="VERIFIED"
             />
           ) : (

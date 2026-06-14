@@ -224,7 +224,7 @@ export default function ScannerView({ userId, activeBounty, onComplete }: Scanne
                         <div className="flex items-center gap-1.5 text-[#00FF41]">
                           <BookText size={12} />
                           <span className="text-[9px] font-mono font-bold uppercase tracking-widest">
-                            {result.provider === 'mock' ? 'Grounded_Mock' : 'Grounded_by_Knowledge_Base'}
+                            {result.provider === 'mock' ? 'Demo_Mode' : 'Grounded_by_Knowledge_Base'}
                           </span>
                         </div>
                         <div className="flex items-center gap-1 text-white/40">

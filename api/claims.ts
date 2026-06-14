@@ -12,6 +12,7 @@ import {
   addToUserBalance,
   completeBounty,
   upsertUser,
+  type LastClaimSnapshot,
 } from './_lib/dynamo.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -57,15 +58,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
 
     // Update user balance and recycled weight
-    await addToUserBalance(userId, rewardKz, weight, {
+    const lastClaimSnapshot: LastClaimSnapshot = {
       amount: rewardKz,
-      material: scanResult.material,
+      material: String(scanResult.material ?? 'Unknown'),
       weight,
-      co2SavedKg: scanResult.co2SavedKg,
-      citations: scanResult.citations,
-      provider: scanResult.provider,
+      co2SavedKg: typeof scanResult.co2SavedKg === 'number' ? scanResult.co2SavedKg : 0,
+      citations: Array.isArray(scanResult.citations)
+        ? (scanResult.citations as Array<{ id: string; source: string }>)
+        : [],
+      provider: String(scanResult.provider ?? 'mock'),
       date: now,
-    });
+    };
+    await addToUserBalance(userId, rewardKz, weight, lastClaimSnapshot);
 
     // Mark bounty done
     await completeBounty(bountyId);
